@@ -1,3 +1,5 @@
+-- Noita data shims
+
 
 -- Shims are mostly (mock) reimplementations of functions here:
 -- Noita\tools_modding\lua_api_documentation.txt
@@ -23,3 +25,10 @@ NoitaData = {}
 require("shims.game-logic")
 require("shims.entities")
 require("shims.spells")
+require("shims.perks")
+
+
+-- Load libraries that are useful
+require("libs.misc")
+json = require("libs.json")
+csv = require("libs.csv")
