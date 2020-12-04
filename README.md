@@ -1,10 +1,11 @@
-Noita Data thing
-================
+Noita Data
+==========
 
-converts noita data files into more usable formats
+Stuff for reading and making sense of Noita's data files, scripts, etc.
 
-maybe
+Unpack your `data.wak` and put it in a `data/` folder.
+You will also need to copy over `data/translations/` as well.
 
-dunno yet
-
+The `shims` folder contains a few mock implementations of Noita game engine functions,
+as well as some actual reimplementations (in Lua of course) where possible.
 
