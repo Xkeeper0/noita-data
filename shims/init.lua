@@ -5,11 +5,16 @@ require("libs.misc")
 json = require("libs.json")
 csv = require("libs.csv")
 
-
 -- Shims are mostly (mock) reimplementations of functions here:
 -- Noita\tools_modding\lua_api_documentation.txt
 -- Obviously since we aren't Noita we can't provide the real ones,
 -- so we have to provide enough fakes to make things work
+
+-- In the future, it might be worth keeping the "noita" environment
+-- separate, or otherwise segregated off, using setfenv or _ENV
+-- this way Noita's global pollution will only pollute its own
+-- environment instead of everything.
+
 
 -- Based vaguely off of the reload_dofile func in
 -- data\entities\_debug\debug_menu.lua
