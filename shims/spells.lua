@@ -5,6 +5,10 @@ function Reflection_RegisterProjectile(filename)
 	-- ?
 end
 
+function ConfigGunActionInfo_PassToGame()
+	print "CALLED"
+	error("fart")
+end
 
 -- The Lua engine ordinarily passes this information back
 -- to the game using this function, but in this case we
@@ -139,7 +143,6 @@ function RegisterGunAction(
 	-- for k, v in pairs(spell) do
 	-- 	print(k, v)
 	-- end
-	print(spell.action_id)
 	assert(not NoitaData.spells[spell.action_id], "duplicate spell: ".. spell.action_id)
 
 	NoitaData.spells[action_id] = spell
