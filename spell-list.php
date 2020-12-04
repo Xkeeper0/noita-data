@@ -16,6 +16,7 @@
 		.l { text-align: left; }
 		.c { text-align: center; }
 		.r { text-align: right; }
+		.hidden { display: none; }
 
 		.icon {
 			width: 32px;
@@ -41,6 +42,7 @@
 			position: sticky;
 			top: 0;
 			z-index: 9999;
+			cursor: pointer;
 		}
 
 		.table tbody th {
@@ -62,6 +64,10 @@
 			writing-mode: vertical-rl;
 			text-orientation: mixed;
 			}
+
+		.deg::after { content: '°'; }
+		.time::after { content: 's'; }
+		.mult::after { content: '×'; }
 	</style>
 </head>
 <body>
@@ -88,7 +94,7 @@
 		// 'action_spawn_probability' => ["action_spawn_probability", "%s"],
 		'action_spawn_requires_flag' => ["action_spawn_requires_flag", "%s", "l", "unlock_flag"],
 		'action_spawn_manual_unlock' => ["action_spawn_manual_unlock", "%s", "c", "yes_no"],
-		'action_max_uses' => ["action_max_uses", "%d", "r"],
+		'action_max_uses' => ["action_max_uses", "%d", "r", "max_uses"],
 		// 'custom_xml_file' => ["custom_xml_file", "%s"],
 		'action_mana_drain' => ["action_mana_drain", "%d", "r"],
 		// 'action_is_dangerous_blast' => ["action_is_dangerous_blast", "%s"],
@@ -99,14 +105,14 @@
 		// 'state_cards_drawn' => ["state_cards_drawn", "%s"],
 		// 'state_discarded_action' => ["state_discarded_action", "%s"],
 		// 'state_destroyed_action' => ["state_destroyed_action", "%s"],
-		'fire_rate_wait' => ["fire_rate_wait", "%.2f", "r", "frac_100"],
-		'reload_time' => ["reload_time", "%.2f", "r", "frac_100"],
-		'speed_multiplier' => ["speed_multiplier", "%.2f&times;", "r"],
-		'child_speed_multiplier' => ["child_speed_multiplier", "%.2f&times;", "r"],
+		'fire_rate_wait' => ["fire_rate_wait", "%.2f", "r time", "frac_100"],
+		'reload_time' => ["reload_time", "%.2f", "r time", "frac_100"],
+		'speed_multiplier' => ["speed_multiplier", "%.2f", "r mult"],
+		'child_speed_multiplier' => ["child_speed_multiplier", "%.2f", "r mult"],
 		'dampening' => ["dampening", "%s"],
-		'spread_degrees' => ["spread_degrees", "%.1f&deg;", "r"],
-		'pattern_degrees' => ["pattern_degrees", "%.1f&deg;", "r"],
-		'screenshake' => ["screenshake", "%s", "r"],
+		'spread_degrees' => ["spread_degrees", "%.1f", "r deg"],
+		'pattern_degrees' => ["pattern_degrees", "%.1f", "r deg"],
+		'screenshake' => ["screenshake", "%.1f", "r"],
 		'recoil' => ["recoil", "%s", "r"],
 		'damage_melee_add' => ["damage_melee_add", "%s", "r", "damage"],
 		'damage_projectile_add' => ["damage_projectile_add", "%s", "r", "damage"],
@@ -131,7 +137,7 @@
 		'ragdoll_fx' => ["ragdoll_fx", "%s", "r"],
 		'friendly_fire' => ["friendly_fire", "%s", "c", "yes_no"],
 		// 'physics_impulse_coeff' => ["physics_impulse_coeff", "%s", "r"],
-		'lifetime_add' => ["lifetime_add", "%s", "r", "frac_100"],
+		'lifetime_add' => ["lifetime_add", "%0.2f", "r time", "frac_100"],
 		// 'sprite' => ["sprite", "%s", "r"],
 		// 'sound_loop_tag' => ["sound_loop_tag", "%s", "l"],
 		'extra_entities' => ["extra_entities", "%s", "l", "csv_links"],
@@ -143,7 +149,8 @@
 <table class='table'>
 	<thead>
 		<tr>
-			<th colspan="2">icon</th>
+			<th>unid</th>
+			<th>icon</th>
 			<th>ID</th>
 <?php
 
@@ -168,8 +175,8 @@
 
 		print "
 		<tr>
-			<td><img class='icon' title='". $spell->action_unidentified_sprite_filename ."' src='". $spell->action_unidentified_sprite_filename ."'></td>
-			<td><img class='icon' title='". $spell->action_sprite_filename ."' src='". $spell->action_sprite_filename ."'></td>
+			<td><span class='hidden'>". $spell->action_unidentified_sprite_filename ."</span><img class='icon' title='". $spell->action_unidentified_sprite_filename ."' src='". $spell->action_unidentified_sprite_filename ."'></td>
+			<td><span class='hidden'>". $spell->action_sprite_filename ."</span><img class='icon' title='". $spell->action_sprite_filename ."' src='". $spell->action_sprite_filename ."'></td>
 			<th class='l'>". $spell->action_id ."<br>". $spell->action_name ."</th>
 		";
 
@@ -179,7 +186,7 @@
 			} else {
 				$val	= sprintf($col[1], $spell->$key);
 			}
-			$classes = $col[2] ?? "";
+			$classes = isset($col[2]) ? $col[2] : "";	// still rockin php 5.5 somewhere, rip
 			if (!isset($changes[$key])) {
 				$classes .= " unchanged";
 			}
@@ -194,7 +201,32 @@
 		";
 
 	}
+?>
 
+	</tbody>
+	</table>
+<script>
+	// Stolen and modified from stackoverflow to make it actually work
+	// apparently nobody uses <thead> / <tbody>  :(
+	// https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407
+
+	const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+	const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+		v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+		)(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+	document.querySelectorAll('thead th').forEach(th => th.addEventListener('click', (() => {
+		const table = th.closest('table');
+		const tbody = table.querySelector('tbody');
+		Array.from(tbody.querySelectorAll('tr'))
+			.sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+			.forEach(tr => tbody.appendChild(tr) );
+	})));
+
+</script>
+</body>
+</html>
+<?php
 	// $spell = new Spell([]);
 	// foreach (Spell::$defaults as $k => $v) {
 	// 	print "$k => $v<br>";
@@ -318,7 +350,7 @@
 
 		public static function frac_100($v) {
 			if ($v === "") return "&mdash;";
-			return sprintf("%0.2fs", $v / 100);
+			return sprintf("%0.2f", $v / 100);
 		}
 
 		public static function yes_no($v) {
@@ -345,6 +377,10 @@
 			return $v * 25;
 		}
 
+		public static function max_uses($v) {
+			return ($v == 0 ? "&infin;" : $v);
+		}
+
 		public static function csv_links($v) {
 			$e = explode(",", $v);
 			$out = [];
@@ -359,4 +395,6 @@
 		}
 
 	}
+
+?>
 
