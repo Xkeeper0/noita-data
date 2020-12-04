@@ -52,6 +52,8 @@ function print_perk_info(perk)
 	--                   Game effect: XXXXXXXXXXXXXXXXXXXX     Func:         XXX
 	--                   Stackable: XXX                        Enemy usable: XXX
 	print(string.format("\n-- %s %s", perk.id, padstr))
+	print(string.format("Name:        %s", GameTextGet(perk.ui_name)))
+	print(string.format("Description: %s", GameTextGet(perk.ui_description)))
 	print(string.format("Func:         %-3s             Game effect: %s", m_func, m_game_effect))
 	print(string.format("Enemy usable: %-15s Stackable:   %s", m_enemy, m_stackable))
 	if (perk.not_in_default_perk_pool) then
