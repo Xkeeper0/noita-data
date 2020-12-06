@@ -10,7 +10,7 @@
 			font-size: 80%;
 			}
 
-		a:visited, a:link { color: #66f; text-decoration: none; }
+		a:visited, a:link { color: #88f; text-decoration: none; }
 		a:hover { color: #ccf; }
 
 		.l { text-align: left; }
@@ -142,7 +142,7 @@
 		// 'sound_loop_tag' => ["sound_loop_tag", "%s", "l"],
 		'extra_entities' => ["extra_entities", "%s", "l", "csv_links"],
 		'game_effect_entities' => ["game_effect_entities", "%s", "l", "csv_links"],
-		// 'projectile_file' => ["projectile_file", "%s", "l", "csv_links"],
+		'projectile_file' => ["projectile_file", "%s", "l", "csv_links_array"],
 	];
 
 ?>
@@ -392,6 +392,11 @@
 			}
 			return implode(", ", $out);
 
+		}
+
+		public static function csv_links_array($v) {
+			// this is actually terrible
+			return static::csv_links(implode(",", $v));
 		}
 
 	}
