@@ -38,3 +38,9 @@ end
 function EntityGetWithTag(tag)
 	return {}
 end
+
+-- EntityGetInRadiusWithTag( pos_x:number, pos_y:number, radius:number, entity_tag:string ) -> {entity_id:int}
+-- [Returns all entities in 'radius' distance from 'x','y'.]
+function EntityGetInRadiusWithTag(pos_x, pos_y, radius, entity_tag)
+	return {}
+end
