@@ -65,6 +65,12 @@
 			text-orientation: mixed;
 			}
 
+		.name { white-space: nowrap; }
+		.desc {
+			font-weight: normal;
+			font-size: 80%;
+			}
+
 		.deg::after { content: '°'; }
 		.time::after { content: 's'; }
 		.mult::after { content: '×'; }
@@ -77,11 +83,15 @@
 	$spells_data	= json_decode($spells_json, true);
 	$spells			= [];
 
-	ksort($spells_data);
+	function sort_noita_spells($a, $b) {
+		return strcasecmp(NoitaTranslation::getText($a->action_name), NoitaTranslation::getText($b->action_name));
+	}
+
 
 	foreach ($spells_data as $spell_id => $spell) {
 		$spells[$spell_id]	= new Spell($spell);
 	}
+	uasort($spells, 'sort_noita_spells');
 
 
 	$cols = [
@@ -177,7 +187,9 @@
 		<tr>
 			<td><span class='hidden'>". $spell->action_unidentified_sprite_filename ."</span><img class='icon' title='". $spell->action_unidentified_sprite_filename ."' src='". $spell->action_unidentified_sprite_filename ."'></td>
 			<td><span class='hidden'>". $spell->action_sprite_filename ."</span><img class='icon' title='". $spell->action_sprite_filename ."' src='". $spell->action_sprite_filename ."'></td>
-			<th class='l'>". $spell->action_id ."<br>". $spell->action_name ."</th>
+			<th class='l'>
+			<span class='name' title=\"". htmlspecialchars($spell->action_id) ."\">". NoitaTranslation::getText($spell->action_name) ."</span>
+			<br><span class='desc'>". NoitaTranslation::getText($spell->action_description) ."</span></th>
 		";
 
 		foreach ($cols as $key => $col) {
@@ -231,6 +243,56 @@
 	// foreach (Spell::$defaults as $k => $v) {
 	// 	print "$k => $v<br>";
 	// }
+
+	class NoitaTranslation {
+		protected static $table = null;
+
+		protected static function init() {
+			static::$table = [];
+			static::readCSV('data/translations/common.csv');
+			static::readCSV('data/translations/common_dev.csv');
+		}
+
+		protected static function readCSV($csvFilename) {
+			$csv = fopen($csvFilename, "r");
+			if ($csv === false) {
+				throw new \Exception("Failed to open file $csvFilename");
+			}
+
+			$n = 0;
+			while (($data = fgetcsv($csv)) !== FALSE) {
+				$n++;
+				if ($n <= 1) continue;
+
+				// Still plenty of these of course
+				// if (isset(static::$table[$data[0]])) {
+				// 	print "duplicate translation key: $data[0]\n";
+				// }
+				static::$table[$data[0]] = $data[1];
+			}
+			fclose($csv);
+		}
+
+		public static function getText($key) {
+			if (static::$table === null) {
+				static::init();
+			}
+
+			// Remove the $ from the start of translation keys
+			if ($key[0] === '$') {
+				$key = substr($key, 1);
+			}
+
+			if (isset(static::$table[$key])) {
+				return static::$table[$key];
+			}
+
+			// If we don't have an actual string for this, just return
+			// the "key" itself (in the case that it's raw text)
+			return $key;
+		}
+	}
+
 
 	class Spell {
 		protected $_data = [];
