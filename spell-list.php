@@ -1,4 +1,7 @@
-<!doctype html>
+<?php
+	error_reporting(E_ALL);
+
+?><!doctype html>
 <html>
 <head>
 	<meta http-equiv='Content-type' content='text/html; charset=utf-8'>
@@ -322,7 +325,7 @@
 		}
 
 		public function __get($key) {
-			return $this->_data[$key];
+			return isset($this->_data[$key]) ? $this->_data[$key] : null;
 		}
 
 		public function is_modified($key) {
