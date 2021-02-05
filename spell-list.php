@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+	<meta http-equiv='Content-type' content='text/html; charset=utf-8'>
 	<title>Noita spell list</title>
 	<style type="text/css">
 		body {
@@ -129,6 +130,11 @@
 		'damage_electricity_add' => ["damage_electricity_add", "%s", "r", "damage"],
 		'damage_fire_add' => ["damage_fire_add", "%s", "r", "damage"],
 		'damage_explosion_add' => ["damage_explosion_add", "%s", "r", "damage"],
+		'damage_ice_add' => ["damage_ice_add", "%s", "r", "damage"],
+		'damage_slice_add' => ["damage_slice_add", "%s", "r", "damage"],
+		'damage_healing_add' => ["damage_healing_add", "%s", "r", "damage"],
+		'damage_curse_add' => ["damage_curse_add", "%s", "r", "damage"],
+		'damage_drill_add' => ["damage_drill_add", "%s", "r", "damage"],
 		'explosion_radius' => ["explosion_radius", "%d", "r"],
 		'damage_critical_chance' => ["damage_critical_chance", "%d%%", "r"],
 		'damage_critical_multiplier' => ["damage_critical_multiplier", "%s", "r"],
