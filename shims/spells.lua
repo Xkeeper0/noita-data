@@ -129,6 +129,11 @@ function RegisterGunAction(
 	spell.damage_electricity_add = damage_electricity_add
 	spell.damage_fire_add = damage_fire_add
 	spell.damage_explosion_add = damage_explosion_add
+	spell.damage_ice_add = damage_ice_add
+	spell.damage_slice_add = damage_slice_add
+	spell.damage_healing_add = damage_healing_add
+	spell.damage_curse_add = damage_curse_add
+	spell.damage_drill_add = damage_drill_add
 	spell.damage_critical_chance = damage_critical_chance
 	spell.damage_critical_multiplier = damage_critical_multiplier
 	spell.explosion_damage_to_materials = explosion_damage_to_materials

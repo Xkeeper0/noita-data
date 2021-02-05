@@ -376,6 +376,11 @@
 			$defaults["damage_fire_add"] = 0;
 			$defaults["damage_melee_add"] = 0;
 			$defaults["damage_projectile_add"] = 0;
+			$defaults["damage_ice_add"] = 0;
+			$defaults["damage_slice_add"] = 0;
+			$defaults["damage_healing_add"] = 0;
+			$defaults["damage_curse_add"] = 0;
+			$defaults["damage_drill_add"] = 0;
 			$defaults["dampening"] = 1;
 			$defaults["explosion_damage_to_materials"] = 0;
 			$defaults["explosion_radius"] = 0;
